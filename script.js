@@ -1,9 +1,9 @@
 window.onload = () => {
-    const canvasWidth = 900;
-    const canvasHeight = 600;
-    const blockSize = 30;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvasWidth = 500;
+    const canvasHeight = 500;
+    const blockSize = 20;
+    const canvas = document.getElementById('canvas'); //selection du canvas
+    const ctx = canvas.getContext('2d'); //mode 2D
     const widthInBlocks = canvasWidth/blockSize;
     const heightInBlocks = canvasHeight/blockSize;
     const centreX = canvasWidth / 2;
@@ -14,20 +14,21 @@ window.onload = () => {
     let score;
     let timeOut;
 
-    const init = () => {
+    const init = () => {  //initialisation du canvas
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.border = "30px solid gray";
+        canvas.style.border = "15px solid gray";
         canvas.style.margin = "50px auto";
         canvas.style.display = "block";
-        canvas.style.backgroundColor = "#ddd";
-        document.body.appendChild(canvas);
+        canvas.style.backgroundColor = "#C0C0C0";
         launch();
     }
-
+    const random = (min, max) => {
+       return Math.floor(Math.random() * (max - min + 1) + min);
+    }
     const launch = () => {
         snakee = new Snake([[6,4],[5,4],[4,4],[3,4],[2,4]],"right");
-        applee = new Apple([10,10]);
+        applee = new Apple([random(1,10),random(1,10)]);
         score = 0;
         clearTimeout(timeOut);
         delay = 100;
@@ -205,7 +206,10 @@ window.onload = () => {
           ctx.fillStyle = "#33cc33";
           ctx.beginPath();
           ctx.arc(x, y, radius, 0, Math.PI*2, true);
+          ctx.strokeStyle = "red";
+          ctx.lineWidth=2;
           ctx.fill();
+          ctx.stroke()
           ctx.restore();
         };
 
