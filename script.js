@@ -11,6 +11,7 @@ window.onload = () => {
     let delay;
     let snakee;
     let applee;
+    let minee;
     let score;
     let timeOut;
 
@@ -26,12 +27,13 @@ window.onload = () => {
     const random = (min, max) => {
        return Math.floor(Math.random() * (max - min + 1) + min);
     }
-    const launch = () => {
+    const launch = () => { //creation des elements du jeu
         snakee = new Snake([[6,4],[5,4],[4,4],[3,4],[2,4]],"right");
-        applee = new Apple([random(1,10),random(1,10)]);
+        applee = new Apple([random(1,widthInBlocks),random(1,heightInBlocks)]);
+        minee = new Mine([random(1,widthInBlocks),random(1,heightInBlocks)]);
         score = 0;
         clearTimeout(timeOut);
-        delay = 100;
+        delay = 120;
         refreshCanvas();
     }
 
@@ -40,11 +42,11 @@ window.onload = () => {
         if (snakee.checkCollision()){
             gameOver();
         } else {
-            if (snakee.isEatingApple(applee)){
+            if (snakee.eatSomething(applee)){
+                //if (snakee.isEatingApple(applee)){
                 score++;
                 snakee.ateApple = true;
 
-                //
                 do {
                     applee.setNewPosition();
                 } while(applee.isOnSnake(snakee));
@@ -53,16 +55,24 @@ window.onload = () => {
                     speedUp();
                 }
             }
+
+
             ctx.clearRect(0,0,canvasWidth,canvasHeight);
             drawScore();
             snakee.draw();
             applee.draw();
+            minee.draw()
             timeOut = setTimeout(refreshCanvas,delay);
          }
+
+         if (snakee.eatSomething(minee)){
+           gameOver()
+         }
+
     }
 
     const speedUp = () => {
-        delay /= 2;
+        delay /= 1.25;
     }
 
     const gameOver = () => {
@@ -106,7 +116,7 @@ window.onload = () => {
 
       draw(){
                 ctx.save();
-                ctx.fillStyle="#ff00ff";
+                ctx.fillStyle="#3f50ff";
                 for (let i=0 ; i < this.body.length ; i++){
                     drawBlock(ctx,this.body[i]);
                 }
@@ -177,23 +187,21 @@ window.onload = () => {
                 for (let i=0 ; i<rest.length ; i++){
                     if (snakeX === rest[i][0] && snakeY === rest[i][1])
                         snakeCollision = true;
-                }
 
+                }
                 return wallCollision || snakeCollision;
             };
 
-        isEatingApple(appleToEat){
+        eatSomething(item){
                 const head = this.body[0];
-                if (head[0] === appleToEat.position[0] && head[1] === appleToEat.position[1])
+                if (head[0] === item.position[0] && head[1] === item.position[1])
                     return true;
                 else
                     return false;
+
             }
 
         }
-
-
-
     class Apple {
         constructor(position){
               this.position = position;
@@ -228,9 +236,43 @@ window.onload = () => {
             }
             return isOnSnake;
         };
-}
+      }
 
+      class Mine {
+          constructor(position){
+                this.position = position;
+          }
+          draw(){
+            const radius = blockSize/2;
+            const x = this.position[0]*blockSize + radius;
+            const y = this.position[1]*blockSize + radius;
+            ctx.save();
+            ctx.fillStyle = "#000000";
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI*2, true);
+            ctx.strokeStyle = "white";
+            ctx.lineWidth=2;
+            ctx.fill();
+            ctx.stroke()
+            ctx.restore();
+          };
 
+          setNewPosition(){
+              const newX = Math.round(Math.random()*(widthInBlocks-1));
+              const newY = Math.round(Math.random()*(heightInBlocks-1));
+              this.position = [newX,newY];
+          };
+
+          isOnSnake (snakeToCheck){
+              let isOnSnake = false;
+              for (let i=0 ; i < snakeToCheck.body.length ; i++){
+                  if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1]){
+                      isOnSnake = true;
+                  }
+              }
+              return isOnSnake;
+          };
+        }
 
     document.onkeydown =  (e) => {
         const key = e.keyCode;
