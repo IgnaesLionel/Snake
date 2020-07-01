@@ -65,10 +65,6 @@ window.onload = () => {
             timeOut = setTimeout(refreshCanvas,delay);
          }
 
-         if (snakee.eatSomething(minee)){
-           gameOver()
-         }
-
     }
 
     const speedUp = () => {
@@ -170,6 +166,7 @@ window.onload = () => {
         checkCollision(){
                 let wallCollision = false;
                 let snakeCollision = false;
+                let mineCollision = false;
                 const head = this.body[0];
                 const rest = this.body.slice(1);
                 const snakeX = head[0];
@@ -189,7 +186,12 @@ window.onload = () => {
                         snakeCollision = true;
 
                 }
-                return wallCollision || snakeCollision;
+
+                if (snakee.eatSomething(minee)){
+                  mineCollision = true;
+                }
+
+                return wallCollision || snakeCollision || mineCollision;
             };
 
         eatSomething(item){
