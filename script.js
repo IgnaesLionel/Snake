@@ -1,6 +1,6 @@
 window.onload = () => {
-    const canvasWidth = 500;
-    const canvasHeight = 500;
+    const canvasWidth = 800;
+    const canvasHeight = 800;
     const blockSize = 20;
     const canvas = document.getElementById('canvas'); //selection du canvas
     const ctx = canvas.getContext('2d'); //mode 2D
@@ -28,13 +28,14 @@ window.onload = () => {
        return Math.floor(Math.random() * (max - min + 1) + min);
     }
     const launch = () => { //creation des elements du jeu
-        snakee = new Snake([[6,4],[5,4],[4,4],[3,4],[2,4]],"right");
-        applee = new Apple([random(1,widthInBlocks),random(1,heightInBlocks)]);
-        minee = new Mine([random(1,widthInBlocks),random(1,heightInBlocks)]);
+        snakee = new Snake([[6,6],[5,6],[4,6],[3,6],[2,6]],"right");
+        applee = new Apple([random(2,widthInBlocks-2),random(1,heightInBlocks-2)]);
+        minee = new Mine([random(2,widthInBlocks -2),random(1,heightInBlocks-2)]);
         score = 0;
         clearTimeout(timeOut);
         delay = 120;
         refreshCanvas();
+
     }
 
     const refreshCanvas = () => {
@@ -43,28 +44,26 @@ window.onload = () => {
             gameOver();
         } else {
             if (snakee.eatSomething(applee)){
-                //if (snakee.isEatingApple(applee)){
                 score++;
                 snakee.ateApple = true;
-
                 do {
                     applee.setNewPosition();
+                    minee.mineSpawn()
                 } while(applee.isOnSnake(snakee));
 
                 if(score % 5 == 0){
                     speedUp();
                 }
             }
-
-
             ctx.clearRect(0,0,canvasWidth,canvasHeight);
             drawScore();
             snakee.draw();
             applee.draw();
-            minee.draw()
+            minee.draw();
             timeOut = setTimeout(refreshCanvas,delay);
-         }
 
+          //  console.log(minee.position)
+         }
     }
 
     const speedUp = () => {
@@ -82,8 +81,8 @@ window.onload = () => {
         ctx.strokeText("Game Over", centreX, centreY - 180);
         ctx.fillText("Game Over", centreX, centreY - 180);
         ctx.font = "bold 30px sans-serif";
-        ctx.strokeText("Appuyer sur la touche Espace pour rejouer", centreX, centreY - 120);
-        ctx.fillText("Appuyer sur la touche Espace pour rejouer", centreX, centreY - 120);
+        ctx.strokeText("Score : " + score + " Espace pour \n rejouer", centreX, centreY - 120);
+        ctx.fillText("Score : " + score + " Espace pour \n rejouer", centreX, centreY - 120);
         ctx.restore();
     }
 
@@ -108,7 +107,9 @@ window.onload = () => {
         this.body = body;
         this.direction = direction;
         this.ateApple = false;
+
       }
+
 
       draw(){
                 ctx.save();
@@ -195,15 +196,18 @@ window.onload = () => {
             };
 
         eatSomething(item){
-                const head = this.body[0];
-                if (head[0] === item.position[0] && head[1] === item.position[1])
-                    return true;
-                else
-                    return false;
 
-            }
+          const head = this.body[0];
+          for (let i = 0; i < item.position.length; i=i+2){
+                if (head[0] === item.position[i] && head[1] === item.position[i+1]){
+                  console.log("test")
+                    return true;
+                  }else return false;
+                }
 
         }
+      }
+
     class Apple {
         constructor(position){
               this.position = position;
@@ -248,16 +252,23 @@ window.onload = () => {
             const radius = blockSize/2;
             const x = this.position[0]*blockSize + radius;
             const y = this.position[1]*blockSize + radius;
+            const a = this.position[2]*blockSize + radius;
+            const b = this.position[3]*blockSize + radius;
+
+            console.log(this.position.length)
+
             ctx.save();
             ctx.fillStyle = "#000000";
-            ctx.beginPath();
-            ctx.arc(x, y, radius, 0, Math.PI*2, true);
-            ctx.strokeStyle = "white";
-            ctx.lineWidth=2;
-            ctx.fill();
-            ctx.stroke()
-            ctx.restore();
-          };
+
+            for (let i = 0; i < this.position.length; i=i+2){
+              ctx.beginPath();
+              ctx.arc(this.position[i]*blockSize + radius, this.position[i+1]*blockSize + radius, radius, 0, Math.PI*1, true);
+              ctx.strokeStyle = "red";
+              ctx.lineWidth=2;
+              ctx.fill();
+              ctx.stroke()
+            }
+          }
 
           setNewPosition(){
               const newX = Math.round(Math.random()*(widthInBlocks-1));
@@ -274,7 +285,13 @@ window.onload = () => {
               }
               return isOnSnake;
           };
+
+          mineSpawn = () => {
+            this.position.push(random(2,widthInBlocks -2),random(1,heightInBlocks-2))
+          }
+
         }
+
 
     document.onkeydown =  (e) => {
         const key = e.keyCode;
@@ -292,6 +309,9 @@ window.onload = () => {
             case 40:
                 newDirection = "down";
                 break;
+            case 96:
+                minee.mineSpawn();
+                break;
             case 32:
                 launch();
                 return;
@@ -299,6 +319,6 @@ window.onload = () => {
                 return;
         }
         snakee.setDirection(newDirection);
-    };
-  init();
-}
+      };
+      init()
+  }
