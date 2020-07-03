@@ -55,6 +55,13 @@ window.onload = () => {
                     speedUp();
                 }
             }
+
+            if (snakee.eatSomething(minee)){
+                 console.log('pti test')
+
+            }
+
+
             ctx.clearRect(0,0,canvasWidth,canvasHeight);
             drawScore();
             snakee.draw();
