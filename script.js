@@ -121,9 +121,16 @@ window.onload = () => {
       draw(){
                 ctx.save();
                 ctx.fillStyle="#3f50ff";
+                ctx.shadowOffsetX = 5;
+                   ctx.shadowOffsetY = 15;
+                   ctx.shadowBlur    = 4;
+                   ctx.shadowColor   = 'rgba(204, 204, 204, 0.5)';
+
+
                 for (let i=0 ; i < this.body.length ; i++){
                     drawBlock(ctx,this.body[i]);
                 }
+
                 ctx.restore();
             };
 
