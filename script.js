@@ -80,7 +80,7 @@ window.onload = () => {
     const gameOver = () => {
         ctx.save();
         ctx.font = "bold 70px sans-serif";
-        ctx.fillStyle = "#000";
+        ctx.fillStyle = "#111";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.strokeStyle = "white";
