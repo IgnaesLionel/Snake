@@ -28,7 +28,7 @@ window.onload = () => {
        return Math.floor(Math.random() * (max - min + 1) + min);
     }
     const launch = () => { //creation des elements du jeu
-        snakee = new Snake([[6,6],[5,6],[4,6],[3,6],[2,6]],"right");
+        snakee = new Snake([[6,6],[5,6],[4,6]],"right");
         applee = new Apple([random(2,widthInBlocks-2),random(1,heightInBlocks-2)]);
         minee = new Mine([[random(2,widthInBlocks -2),random(1,heightInBlocks-2)]]);
         score = 0;
@@ -104,9 +104,18 @@ window.onload = () => {
     }
 
     const drawMine = (ctx, position) => {
-        const x = position[0]*blockSize;
-        const y = position[1]*blockSize;
-        ctx.fillRect(x,y,blockSize,blockSize);
+      const x = position[0]*blockSize;
+      const y = position[1]*blockSize;
+      const radius = blockSize/2;
+      ctx.save()
+      ctx.beginPath();
+      ctx.arc(x + radius, y + radius, radius, 0, Math.PI*1, true);
+      ctx.strokeStyle = "red";
+      ctx.lineWidth=2;
+      ctx.fill();
+      ctx.stroke()
+      ctx.restore
+
     }
 
     class Snake {
@@ -123,13 +132,13 @@ window.onload = () => {
                 ctx.shadowOffsetY = 15;
                 ctx.shadowBlur    = 4;
                 ctx.shadowColor   = 'rgba(204, 204, 204, 0.5)';
-                ctx.restore();
+
 
                 for (let i=0 ; i < this.body.length ; i++){
                     drawBlock(ctx,this.body[i]);
                 }
 
-
+                ctx.restore();
             };
 
       advance(){
@@ -201,11 +210,8 @@ window.onload = () => {
                 }
 
                 for (let i = 0; i < minee.position.length; i++){
-                  console.log(minee.position[i][0])
-
                     if (head[0] == minee.position[i][0] && head[1] == minee.position[i][1]){
-
-                        mineCollision = true}
+                    mineCollision = true}
                 }
 
                 return wallCollision || snakeCollision || mineCollision;
