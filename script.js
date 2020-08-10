@@ -33,7 +33,7 @@ window.onload = () => {
         minee = new Mine([[random(2,widthInBlocks -2),random(1,heightInBlocks-2)]]);
         score = 0;
         clearTimeout(timeOut);
-        delay = 120;
+        delay = 80;
         refreshCanvas();
 
     }
@@ -100,6 +100,8 @@ window.onload = () => {
     const drawBlock = (ctx, position) => {
         const x = position[0]*blockSize;
         const y = position[1]*blockSize;
+        let randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+        ctx.fillStyle=randomColor;
         ctx.fillRect(x,y,blockSize,blockSize);
     }
 
@@ -127,14 +129,7 @@ window.onload = () => {
 
       draw(){
                 ctx.save();
-                ctx.fillStyle="#3f50ff";
-                ctx.shadowOffsetX = 5;
-                ctx.shadowOffsetY = 15;
-                ctx.shadowBlur    = 4;
-                ctx.shadowColor   = 'rgba(204, 204, 204, 0.5)';
-
-
-                for (let i=0 ; i < this.body.length ; i++){
+                    for (let i=0 ; i < this.body.length ; i++){
                     drawBlock(ctx,this.body[i]);
                 }
 
