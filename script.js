@@ -110,17 +110,10 @@ window.onload = () => {
     const drawMine = (ctx, position) => {
       const x = position[0]*blockSize;
       const y = position[1]*blockSize;
-      const radius = blockSize/2;
-      ctx.save();
-      ctx.fillStyle = "red";
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, Math.PI*2, true);
-      ctx.strokeStyle = "black";
-      ctx.lineWidth=2;
-      ctx.fill();
-      ctx.stroke()
-      ctx.restore();
-
+      ctx.save()
+      ctx.fillStyle="red";
+      ctx.fillRect(x,y,blockSize,blockSize);
+      ctx.restore()
     }
 
     class Snake {
