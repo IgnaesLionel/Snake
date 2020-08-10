@@ -30,7 +30,7 @@ window.onload = () => {
     const launch = () => { //creation des elements du jeu
         snakee = new Snake([[6,6],[5,6],[4,6],[3,6],[2,6]],"right");
         applee = new Apple([random(2,widthInBlocks-2),random(1,heightInBlocks-2)]);
-        minee = new Mine([[random(2,widthInBlocks -2),random(1,heightInBlocks-2)]]);
+        minee = new Mine([random(2,widthInBlocks -2),random(1,heightInBlocks-2)]);
         score = 0;
         clearTimeout(timeOut);
         delay = 120;
@@ -58,13 +58,15 @@ window.onload = () => {
 
             if (snakee.eatSomething(minee)){
                  console.log('pti test')
+
             }
+
+
             ctx.clearRect(0,0,canvasWidth,canvasHeight);
             drawScore();
             snakee.draw();
             applee.draw();
             minee.draw();
-            console.log(minee.position)
             timeOut = setTimeout(refreshCanvas,delay);
 
           //  console.log(minee.position)
@@ -107,20 +109,14 @@ window.onload = () => {
         ctx.fillRect(x,y,blockSize,blockSize);
     }
 
-    const drawMine = (ctx, position) => {
-        const x = position[0]*blockSize;
-        const y = position[1]*blockSize;
-        ctx.fillRect(x,y,blockSize,blockSize);
-    }
-
-
-
     class Snake {
       constructor(body, direction) {
         this.body = body;
         this.direction = direction;
         this.ateApple = false;
+
       }
+
 
       draw(){
                 ctx.save();
@@ -267,16 +263,25 @@ window.onload = () => {
                 this.position = position;
           }
           draw(){
+            const radius = blockSize/2;
+            const x = this.position[0]*blockSize + radius;
+            const y = this.position[1]*blockSize + radius;
+            const a = this.position[2]*blockSize + radius;
+            const b = this.position[3]*blockSize + radius;
+
+            console.log(this.position.length)
+
             ctx.save();
-            ctx.fillStyle="#666";
-            ctx.shadowOffsetX = 5;
-            ctx.shadowOffsetY = 15;
-            ctx.shadowBlur    = 4;
-            ctx.shadowColor   = 'rgba(204, 204, 204, 0.5)';
+            ctx.fillStyle = "#000000";
             ctx.restore();
 
-            for (let i=0 ; i < this.position.length ; i++){
-                drawMine(ctx,this.position[i]);
+            for (let i = 0; i < this.position.length; i=i+2){
+              ctx.beginPath();
+              ctx.arc(this.position[i]*blockSize + radius, this.position[i+1]*blockSize + radius, radius, 0, Math.PI*1, true);
+              ctx.strokeStyle = "red";
+              ctx.lineWidth=2;
+              ctx.fill();
+              ctx.stroke()
             }
           }
 
@@ -288,8 +293,8 @@ window.onload = () => {
 
           isOnSnake (snakeToCheck){
               let isOnSnake = false;
-              for (let i=0 ; i < snakeToCheck.position.length ; i++){
-                  if(this.position[0] === snakeToCheck.position[i][0] && this.position[1] === snakeToCheck.position[i][1]){
+              for (let i=0 ; i < snakeToCheck.body.length ; i++){
+                  if(this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1]){
                       isOnSnake = true;
                   }
               }
@@ -297,7 +302,7 @@ window.onload = () => {
           };
 
           mineSpawn = () => {
-            this.position.push([random(2,widthInBlocks -2),random(1,heightInBlocks-2)])
+            this.position.push(random(2,widthInBlocks -2),random(1,heightInBlocks-2))
           }
 
         }
