@@ -98,14 +98,20 @@ window.onload = () => {
     }
 
     const drawBlock = (ctx, position) => {
-        const x = position[0]*blockSize;
-        const y = position[1]*blockSize;
+        const radius = blockSize/2;
+        const x = position[0]*blockSize + radius;
+        const y = position[1]*blockSize + radius;
         let randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
         ctx.save()
         ctx.fillStyle=randomColor;
-        ctx.fillRect(x,y,blockSize,blockSize);
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI*2, true);
+        ctx.strokeStyle = "green";
+        ctx.fill();
+        ctx.stroke()
         ctx.restore()
     }
+
 
     const drawMine = (ctx, position) => {
       const x = position[0]*blockSize;
