@@ -33,7 +33,7 @@ window.onload = () => {
         minee = new Mine([[random(2,widthInBlocks -2),random(1,heightInBlocks-2)]]);
         score = 0;
         clearTimeout(timeOut);
-        delay = 80;
+        delay = 100;
         refreshCanvas();
 
     }
@@ -101,22 +101,25 @@ window.onload = () => {
         const x = position[0]*blockSize;
         const y = position[1]*blockSize;
         let randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+        ctx.save()
         ctx.fillStyle=randomColor;
         ctx.fillRect(x,y,blockSize,blockSize);
+        ctx.restore()
     }
 
     const drawMine = (ctx, position) => {
       const x = position[0]*blockSize;
       const y = position[1]*blockSize;
       const radius = blockSize/2;
-      ctx.save()
+      ctx.save();
+      ctx.fillStyle = "red";
       ctx.beginPath();
-      ctx.arc(x + radius, y + radius, radius, 0, Math.PI*1, true);
-      ctx.strokeStyle = "red";
+      ctx.arc(x, y, radius, 0, Math.PI*2, true);
+      ctx.strokeStyle = "black";
       ctx.lineWidth=2;
       ctx.fill();
       ctx.stroke()
-      ctx.restore
+      ctx.restore();
 
     }
 
@@ -236,7 +239,7 @@ window.onload = () => {
           ctx.fillStyle = "#33cc33";
           ctx.beginPath();
           ctx.arc(x, y, radius, 0, Math.PI*2, true);
-          ctx.strokeStyle = "red";
+          ctx.strokeStyle = "green";
           ctx.lineWidth=2;
           ctx.fill();
           ctx.stroke()
@@ -295,7 +298,10 @@ window.onload = () => {
           };
 
           mineSpawn = () => {
-            this.position.push([random(2,widthInBlocks -2),random(1,heightInBlocks-2)])
+            let newMinePosition = []
+            do {newMinePosition = [random(2,widthInBlocks -2),random(1,heightInBlocks-2)]}
+            while (newMinePosition == applee.position) //tant que
+            this.position.push(newMinePosition)
           }
 
         }
