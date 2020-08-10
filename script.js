@@ -56,18 +56,14 @@ window.onload = () => {
                 }
             }
 
-            if (snakee.eatSomething(minee)){
-                 console.log('pti test')
-            }
             ctx.clearRect(0,0,canvasWidth,canvasHeight);
             drawScore();
             snakee.draw();
             applee.draw();
             minee.draw();
-            console.log(minee.position)
             timeOut = setTimeout(refreshCanvas,delay);
 
-          //  console.log(minee.position)
+
          }
     }
 
@@ -112,8 +108,6 @@ window.onload = () => {
         const y = position[1]*blockSize;
         ctx.fillRect(x,y,blockSize,blockSize);
     }
-
-
 
     class Snake {
       constructor(body, direction) {
@@ -206,8 +200,12 @@ window.onload = () => {
 
                 }
 
-                if (snakee.eatSomething(minee)){
-                  mineCollision = true;
+                for (let i = 0; i < minee.position.length; i++){
+                  console.log(minee.position[i][0])
+
+                    if (head[0] == minee.position[i][0] && head[1] == minee.position[i][1]){
+
+                        mineCollision = true}
                 }
 
                 return wallCollision || snakeCollision || mineCollision;
@@ -218,7 +216,6 @@ window.onload = () => {
           const head = this.body[0];
           for (let i = 0; i < item.position.length; i=i+2){
                 if (head[0] === item.position[i] && head[1] === item.position[i+1]){
-                  console.log("test")
                     return true;
                   }else return false;
                 }
