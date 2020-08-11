@@ -3,7 +3,22 @@ window.onload = () => {
     const canvasHeight = 800;
     const blockSize = 20;
     const canvas = document.getElementById('canvas'); //selection du canvas
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    canvas.style.border = "15px solid gray";
+    canvas.style.margin = "50px auto";
+    canvas.style.display = "block";
     const ctx = canvas.getContext('2d'); //mode 2D
+
+    const matrixBackground = document.getElementById("background");
+    const backgroundCtx = matrixBackground.getContext("2d");
+    backgroundCtx.width = 900
+    backgroundCtx.height = 900
+    let img = new Image;
+    img.src = "matrix.jpg"
+    backgroundCtx.drawImage(img,0,0)
+
+
     const widthInBlocks = canvasWidth/blockSize;
     const heightInBlocks = canvasHeight/blockSize;
     const centreX = canvasWidth / 2;
@@ -15,15 +30,6 @@ window.onload = () => {
     let score;
     let timeOut;
 
-    const init = () => {  //initialisation du canvas
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        canvas.style.border = "15px solid gray";
-        canvas.style.margin = "50px auto";
-        canvas.style.display = "block";
-        canvas.style.backgroundColor = "#C0C0C0";
-        launch();
-    }
     const random = (min, max) => {
        return Math.floor(Math.random() * (max - min + 1) + min);
     }
@@ -48,8 +54,10 @@ window.onload = () => {
                 snakee.ateApple = true;
                 do {
                     applee.setNewPosition();
-                    minee.mineSpawn()
+
                 } while(applee.isOnSnake(snakee));
+
+                minee.mineSpawn()
 
                 if(score % 5 == 0){
                     speedUp();
@@ -98,10 +106,13 @@ window.onload = () => {
     }
 
     const drawBlock = (ctx, position) => {
+        let randomNumber =(Math.round(Math.random() * 10))
+        let colors = ["#FF0000","#ff6000","#fff500","#26f217","#19e8f0","#9400D3","#FF0000","#ff6000","#fff500","#26f217", "#19e8f0"]
         const radius = blockSize/2;
         const x = position[0]*blockSize + radius;
         const y = position[1]*blockSize + radius;
-        let randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+        let randomColor = colors[randomNumber]
+
         ctx.save()
         ctx.fillStyle=randomColor;
         ctx.beginPath();
@@ -333,5 +344,5 @@ window.onload = () => {
         }
         snakee.setDirection(newDirection);
       };
-      init()
+      launch()
   }
